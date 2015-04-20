@@ -132,6 +132,17 @@ class PDFBuilder(Builder):
                 self.info(red("FAILED"))
 
     def init_document_data(self):
+        
+        author_texescaped = unicode(self.config.copyright)\
+                                   .translate(texescape.tex_escape_map)
+        project_doc_texescaped = unicode(self.config.project + ' Documentation')\
+                                         .translate(texescape.tex_escape_map)
+        self.config.pdf_documents.append((self.config.master_doc,
+                                         self.config.project,
+                                         project_doc_texescaped,
+                                         author_texescaped,
+                                         'manual'))
+
         preliminary_document_data = map(list, self.config.pdf_documents)
         if not preliminary_document_data:
             self.warn('no "pdf_documents" config value found; no documents '
@@ -898,13 +909,4 @@ def setup(app):
     app.add_config_value('pdf_fit_background_mode',"scale", None)
     app.add_config_value('section_header_depth',2, None)
     app.add_config_value('pdf_baseurl', urlunparse(['file',os.getcwd()+os.sep,'','','','']), None)
-
-    author_texescaped = unicode(app.config.copyright)\
-                               .translate(texescape.tex_escape_map)
-    project_doc_texescaped = unicode(app.config.project + ' Documentation')\
-                                     .translate(texescape.tex_escape_map)
-    app.config.pdf_documents.append((app.config.master_doc,
-                                     app.config.project,
-                                     project_doc_texescaped,
-                                     author_texescaped,
-                                     'manual'))
+    
